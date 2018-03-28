@@ -1,0 +1,26 @@
+#/bin/bash
+#
+#
+# Requires:
+#   - awscli
+#   - ec2-instance with IAM permission to s3
+#   - caddy#
+set -x
+MYBUCKET='s3://caddy-redirects'
+source /root/.bash_profile
+if test -e /var/lock/subsys/caddy-cron; then
+  exit 0
+else
+  touch /var/lock/subsys/caddy-cron
+  aws s3 cp $MYBUCKET/Caddyfile /etc/caddy/Caddyfile
+  md5sum --quiet -c /etc/caddy/Caddyfile.md5
+  if (( $? != 0 )); then
+    pkill -USR1 caddy
+    md5sum /etc/caddy/Caddyfile > /etc/caddy/Caddyfile.md5
+    sleep 60
+    pkill -USR1 caddy
+    sleep 20
+    aws s3 sync /etc/ssl/caddy $MYBUCKET/ssl_certs
+  fi
+  rm -f /var/lock/subsys/caddy-cron
+fi

@@ -1,0 +1,129 @@
+https://foobar.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://testthis.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://brown.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://rose.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://eagles.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://phillies.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://flyers.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://wildcats.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://owls.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://hawks.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://explorers.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://quakers.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://dragons.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://pioneers.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://hoosiers.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+https://beavers.carl.tux.rocks {
+
+  redir 301 {
+    / https://www.linuxfoundation.org
+    tls carl_latini@yahoo.com
+  }
+}
+
+

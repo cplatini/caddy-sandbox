@@ -1,0 +1,88 @@
+#!/bin/bash
+yum -y update
+yum -y install epel-release
+yum -y install curl
+yum -y install wget
+yum -y install bind-utils
+yum -y install caddy
+yum -y install python2-pip.noarch
+pip install --upgrade pip
+pip install awscli --upgrade --user
+echo "export PATH=~/.local/bin:$PATH" >> /root/.bash_profile
+source /root/.bash_profile
+
+touch /etc/caddy/Caddyfile
+
+#Create www-data account.
+useradd www-data
+
+chown -R root:www-data /etc/caddy
+mkdir -p /etc/ssl/caddy
+chown -R www-data:root /etc/ssl/caddy
+mkdir -p /var/www
+chown -R www-data:www-data /var/www
+mv /bin/caddy /usr/local/bin/caddy
+chmod 755 /usr/local/bin/caddy
+setcap CAP_NET_BIND_SERVICE=+eip /usr/local/bin/caddy
+
+#Set ulimits to 8192
+cat << EOF >> /etc/security/limits.conf
+*    soft    nofile 8192
+*    hard    nofile 8192
+EOF
+
+#Create systemd caddy file.
+cat << EOF >> /etc/systemd/system/caddy.service
+[Unit]
+Description=Caddy HTTP/2 web server
+Documentation=https://caddyserver.com/docs
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Restart=on-abnormal
+
+User=www-data
+Group=www-data
+
+Environment=CADDYPATH=/etc/ssl/caddy
+
+ExecStart=/usr/local/bin/caddy -log stdout -agree=true -conf=/etc/caddy/Caddyfile -root=/var/tmp
+ExecReload=/bin/kill -USR1 $MAINPID
+
+KillMode=mixed
+KillSignal=SIGQUIT
+TimeoutStopSec=5s
+
+LimitNOFILE=1048576
+LimitNPROC=512
+
+PrivateTmp=true
+PrivateDevices=false
+ProtectHome=true
+ProtectSystem=full
+
+ReadWriteDirectories=/etc/ssl/caddy
+
+CapabilityBoundingSet=CAP_NET_BIND_SERVICE
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable caddy.service
+systemctl start caddy.service
+
+aws s3 cp s3://caddy-redirects/Caddyfile /etc/caddy/Caddyfile
+aws s3 cp s3://caddy-redirects/aws-s3-caddy.cron /etc/caddy/aws-s3-caddy.cron
+chmod 755 /etc/caddy/aws-s3-caddy.cron
+aws s3 sync s3://caddy-redirects/ssl_certs/ /etc/ssl/caddy/
+chown -R www-data:www-data /etc/ssl/caddy
+pkill -USR1 caddy
+
+
+( crontab -l ; echo "*/3 * * * * /etc/caddy/aws-s3-caddy.cron 2>&1 | tee /var/log/caddy-sync.log" ) | crontab -
+systemctl restart crond
+
+
